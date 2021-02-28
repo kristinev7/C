@@ -24,6 +24,12 @@ int get_file_size(FILE *fp) {
 
 int main (int argc, char *argv[])
 {
+
+		printf("length of argv[3]: %d\n", strlen(argv[3])); 
+		printf("length of argv[2]: %d\n", strlen(argv[2])); 
+
+	
+
 		FILE *fptr1; /* points to the original file */ 
 		FILE *fptr2; /* copy original file here */
 		int ch, charac, lines, words;   /* reads number of char of file to copy to new foler */
@@ -32,13 +38,18 @@ int main (int argc, char *argv[])
 		char lstr[11];
 		lstr[10] = '\0'; 
 		index = 0;
-		char fout_name[11]; 
-		 fout_name[10] = '\0'; /* null terminated */
+
+		char fout_name[strlen(argv[3])]; /* string of parameter 3 */
+		char fin_name[strlen(argv[2])]; /* string of parameter 2 */
+
+		fout_name[strlen(argv[3]) -1] = '\0'; 
+		fin_name[strlen(argv[2])  -1] = '\0'; 
+
 		char *sort_cmd = "sort";
 		char *ret_cmd = " > ";
 		char *sort_out = "sortedoutput.txt";
 		char *wcs = "wc";
-		char *wc_out = "output.txt";
+		char *wc_out = "countoutput.txt";
 	/* check arguments */
 
 		if ( argc != 4)
@@ -46,6 +57,8 @@ int main (int argc, char *argv[])
 		 fprintf(stderr, "usage error: format choice 1,2,or 3 in_file, out_file\n");
 			return 1;
    }
+	
+	/* open files */
 		if ((fptr1 = fopen(argv[2], "r") ) == NULL)
 		{
 				fprintf(stderr, "Can't read or no such file - %s.\n", argv[2]);
@@ -74,13 +87,11 @@ int main (int argc, char *argv[])
 						putc(ch, fptr2);
 			}
 			printf("File has been copied.\n"); 
-	  
-//			fclose(fptr1);
-	//		fclose(fptr2);
-			
-		//	return 0;
-													
+
 		}// if argv==1
+     
+		/* argv[1] == 2 */
+
 		if (atoi(argv[1]) == 2)
 		{
 		//			size = get_file_size(fptr1);
@@ -107,9 +118,9 @@ int main (int argc, char *argv[])
 								}
 	
 								/* if there is empty character */
-								if (c != ' ')  {
+								
 								  fputc('\n', fptr2);
-								}
+							
 
 								/* reset index */
 								index = 0;
@@ -125,31 +136,35 @@ int main (int argc, char *argv[])
 					int length = strlen(sort_cmd) + sizeof(fout_name) + strlen(ret_cmd) + strlen(sort_out) + 1; 
 					char sys_cmd[length +1]; //+1 for null termnator
 					sys_cmd[length] = '\0';
-					strcpy(&fout_name, argv[3]);
+					//strcpy(&fout_name, argv[3]);
+
+					/* concatenate string commands to make system command */
+
 					strcpy(&sys_cmd, sort_cmd);
 					strcat(&sys_cmd, " ");
-					strcat(&sys_cmd, &fout_name);
+					strcat(&sys_cmd, argv[3]);
 					strcat(&sys_cmd, ret_cmd);
 					strcat(&sys_cmd, sort_out);
-
 
 					printf("command %s\n", &sys_cmd);
 					system(&sys_cmd);
 					printf("copied.\n");
 
 		} //if argv == 2
-		 
+		 /* call 'wc' system command */
+		/* get length of string command for wc */
+
 			if (atoi(argv[1]) == 3)
 			{
-					int len = strlen(wcs) + sizeof(fout_name) + strlen(ret_cmd) + 1;
+					int len = strlen(wcs) + sizeof(fin_name) + strlen(ret_cmd) + 1;
 					char sys_cmd2[len+1];
 					sys_cmd2[len] ='\0';
-					strcpy(&fout_name, argv[3]);
-					strcpy(&sys_cmd2, wcs);
-					
+					strcpy(&fin_name, argv[2]);
+
 					/* concatenate the command strings */
+					strcpy(&sys_cmd2, wcs);
 					strcat(&sys_cmd2, " ");
-					strcat(&sys_cmd2, &fout_name);
+					strcat(&sys_cmd2, fin_name);
 					strcat(&sys_cmd2, ret_cmd);
 					strcat(&sys_cmd2, wc_out);
 					
