@@ -1,0 +1,40 @@
+               Welcome to CPS 4200 (Systems Programming)
+
+   This course focuses on the knowledge of Unix system and use the C programming language to implement the systems level programming, Operating System services and application interface programming. There are many hands-on exercises and assignments. If you don't like coding, please do NOT take this course. For CS Major, you can take the alternate course - CPS 4150 (Computer Architecture) in the fall semester.
+
+   The following topics are covered:
+* Unix shell environment, filesystem, process and commands
+* Editor - vi
+* C language: struct, dynamic array, pointer, address, call by value/reference/address, file I/O
+* Memory management
+* Process control, threads, scheduling
+* Synchronization, signals
+* Compile, execute and debug C programs on Linux
+* Debugger: gdb
+* Interprocess communcation, socket, client/server
+* Parallelism, multi-threading, concurrent, fork
+* Implement Linux commands
+
+Prerequisite: CPS 3250 (Operating Systems) with grade C and above.
+
+Notes
+* This is a hands-on course. Students are required to bring a personal laptop to every class.
+* Assignments should be implemented on a Linux server that is announced on the first day of the class.
+* Instructional methods: lecture with slides, class discussions and exercises, and project creations.
+* This course is available only in the spring semester.
+* C or better is needed for CS and IT majors.
+
+Instructors
+* Dr. Ching-Song Wei
+* Dr. Ching-yu (Austin) Huang
+
+CPS 4200 Course Description
+   Investigation of applied systems level programming as it relates to operating system services and application interface programming. Topics will include: operating system service calls, file I/O, directory structure, memory management, process control, tasks, threads, concurrency, parallelism event driven programming, inter-process communication, sockets, servers and network protocols.
+
+Student Learning Outcomes
+1. Upon completion of this course, the student will be able to:
+2. Explain operating system services available to systems programmers.
+3. Design and code systems programs to create, manage and synchronize programs, tasks, threads and processes.
+4. Utilize operating system services to access and manage I/O devices, files and directories.
+5. Implement systems programs to control memory management.
+6. Utilize protocols and interfaces to communicate across computer systems.
