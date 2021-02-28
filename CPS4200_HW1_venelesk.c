@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>  //atoi
-#include "sortlines.h"
+#include <string.h>
 
 #define MIN_SIZE 2048
 
@@ -38,8 +38,9 @@ int main (int argc, char *argv[])
 		 fprintf(stderr, "usage error: format choice 1,2,or 3 in_file, out_file\n");
 			return 1;
    }
-		if (atoi(argv[1]) == 1)
-		{
+
+		/* open file parameters */
+	
 			if ( (fptr1 = fopen(argv[2], "r" )) == NULL )
 			{
 					fprintf(stderr, "Can't read %s.\n", argv[2]);
@@ -48,27 +49,28 @@ int main (int argc, char *argv[])
 			
 			if ( (fptr2 = fopen(argv[3], "w") ) == NULL )
 			{
-					fprintf(stderr, "Can't write %s.\n", argv[3]);
+				 fprintf(stderr, "Can't write %s.\n", argv[3]);
 					return 3;
 			}
+
+		if (atoi(argv[1]) == 1)
+		{
 
 			while ( (ch = getc(fptr1)) != EOF ) 
 					putc(ch, fptr2);
 
 			printf("File has been copied.\n"); 
-	  
-//			fclose(fptr1);
-	//		fclose(fptr2);
-			
-		//	return 0;
+
+		  //return 0;
 													
 		}// if argv==1
+
 		if (atoi(argv[1]) == 2)
 		{
-					size = get_file_size(fptr1);
-					printf("reading file:\n");
 					while ( (c = getc(fptr1) ) != EOF) 
 					{
+
+							printf("%c", c); 
 							/*read char until new line*/
 							lstr[index] = c;
 							if (c == '\n') 
@@ -92,11 +94,16 @@ int main (int argc, char *argv[])
 							}// if \n
 							/* increment */
 							index++;
-						}//while
-					fclose(fptr1);
-					fclose(fptr2);
-					return 0;
-		} //if argv == 2
-}//int main()
+						}//while 
 
-		
+					printf("\n"); 
+		} //if argv == 2
+
+
+	fclose(fptr1);
+	fclose(fptr2);
+
+	printf("complete...\n"); 
+	return NULL; 
+
+}//int main()
