@@ -36,8 +36,9 @@ int main (int argc, char *argv[])
 		 fout_name[10] = '\0'; /* null terminated */
 		char *sort_cmd = "sort";
 		char *ret_cmd = " > ";
-		char *sort_out = "output.txt";
-
+		char *sort_out = "sortedoutput.txt";
+		char *wcs = "wc";
+		char *wc_out = "output.txt";
 	/* check arguments */
 
 		if ( argc != 4)
@@ -88,6 +89,8 @@ int main (int argc, char *argv[])
 					{
 							/*read char until new line*/
 							lstr[index] = c;
+
+							/* if \n is met, store 10 cars */
 							if (c == '\n') 
 							{
 									/* write the first 10 char to fout */
@@ -98,12 +101,17 @@ int main (int argc, char *argv[])
 								}
 										/* clear buffer */
 								int j;
-								for (j=0; j<sizeof(lstr); j++)
+								for (j=0; j< sizeof(lstr); j++)
 								{
 										lstr[j] = ' ';
 								}
-										/*reset index*/
-								fputc('\n', fptr2);
+	
+								/* if there is empty character */
+								if (c != ' ')  {
+								  fputc('\n', fptr2);
+								}
+
+								/* reset index */
 								index = 0;
 								continue;
 							}// if \n
@@ -112,7 +120,9 @@ int main (int argc, char *argv[])
 					}//while
 						
 			/* sort the file into output file */
-					int length = strlen(sort_cmd) + sizeof(fout_name) + strlen(ret_cmd) + 1; // *2 need 2x
+
+					/* get length of system call strings */
+					int length = strlen(sort_cmd) + sizeof(fout_name) + strlen(ret_cmd) + strlen(sort_out) + 1; 
 					char sys_cmd[length +1]; //+1 for null termnator
 					sys_cmd[length] = '\0';
 					strcpy(&fout_name, argv[3]);
@@ -122,6 +132,7 @@ int main (int argc, char *argv[])
 					strcat(&sys_cmd, ret_cmd);
 					strcat(&sys_cmd, sort_out);
 
+
 					printf("command %s\n", &sys_cmd);
 					system(&sys_cmd);
 					printf("copied.\n");
@@ -130,35 +141,27 @@ int main (int argc, char *argv[])
 		 
 			if (atoi(argv[1]) == 3)
 			{
-						charac = words = lines = 0;
-						while( (c = getc(fptr1)) != EOF)
-						{
-						 		charac++;
-								if (ch == '\n' || ch == '\0')
-										lines++;
-								
-								if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\0')
-										words++;
-						}//while ()
-						
-						if (charac > 0)
-						{
-								words++;
-								lines++;
-						}
-				printf("\n");
-		    printf("Total chars  = %d\n", charac);
-    		printf("Total words      = %d\n", words);
-    		printf("Total lines      = %d\n", lines);
-		
-			fclose(fptr1);
-			fclose(fptr2);
-			
-			}//if argv = 3
+					int len = strlen(wcs) + sizeof(fout_name) + strlen(ret_cmd) + 1;
+					char sys_cmd2[len+1];
+					sys_cmd2[len] ='\0';
+					strcpy(&fout_name, argv[3]);
+					strcpy(&sys_cmd2, wcs);
 					
-		return 0;
-									
+					/* concatenate the command strings */
+					strcat(&sys_cmd2, " ");
+					strcat(&sys_cmd2, &fout_name);
+					strcat(&sys_cmd2, ret_cmd);
+					strcat(&sys_cmd2, wc_out);
+					
+					printf("command %s\n", &sys_cmd2);
+					system(&sys_cmd2);
+					printf("counted.\n");
+							
+			}//if argv = 3
+		
+		fclose(fptr1);
+		fclose(fptr2);				
+		return 0;									
 		
 }//int main()
-
 		
