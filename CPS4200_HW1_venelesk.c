@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>  //atoi
+#include <ctype.h>
+#include <fcntl.h>
 #include <string.h>
 
 #define MIN_SIZE 2048
@@ -24,12 +26,17 @@ int main (int argc, char *argv[])
 {
 		FILE *fptr1; /* points to the original file */ 
 		FILE *fptr2; /* copy original file here */
-		int ch;   /* reads number of char of file to copy to new foler */
+		int ch, charac, lines, words;   /* reads number of char of file to copy to new foler */
 		int size, index, count;
 		char c;
 		char lstr[11];
 		lstr[10] = '\0'; 
 		index = 0;
+		char fout_name[11]; 
+		 fout_name[10] = '\0'; /* null terminated */
+		char *sort_cmd = "sort";
+		char *ret_cmd = " > ";
+		char *sort_out = "output.txt";
 
 	/* check arguments */
 
@@ -38,39 +45,47 @@ int main (int argc, char *argv[])
 		 fprintf(stderr, "usage error: format choice 1,2,or 3 in_file, out_file\n");
 			return 1;
    }
-
-		/* open file parameters */
-	
-			if ( (fptr1 = fopen(argv[2], "r" )) == NULL )
-			{
-					fprintf(stderr, "Can't read %s.\n", argv[2]);
-					return 2;
-			}	
-			
-			if ( (fptr2 = fopen(argv[3], "w") ) == NULL )
-			{
-				 fprintf(stderr, "Can't write %s.\n", argv[3]);
-					return 3;
-			}
+		if ((fptr1 = fopen(argv[2], "r") ) == NULL)
+		{
+				fprintf(stderr, "Can't read or no such file - %s.\n", argv[2]);
+				return 2;
+		}
+		
+		if ( (fptr2 = fopen(argv[3], "w") ) == NULL )
+		{
+				fprintf(stderr, "Can't write %s.\n", argv[3]);
+				return 3;
+		}
+		if ( (atoi(argv[1]) > 3) || (atoi(argv[1]) < 1)) 
+		{
+				fprintf(stderr, "Wrong choice, the only available values are 1, 2, 3.\n");
+		}
 
 		if (atoi(argv[1]) == 1)
 		{
-
-			while ( (ch = getc(fptr1)) != EOF ) 
-					putc(ch, fptr2);
-
+			while ( (ch = getc(fptr1)) != EOF )
+			{ 
+					if(islower(ch))
+					{
+						ch = toupper(ch);
+					}
+					
+						putc(ch, fptr2);
+			}
 			printf("File has been copied.\n"); 
-
-		  //return 0;
+	  
+//			fclose(fptr1);
+	//		fclose(fptr2);
+			
+		//	return 0;
 													
 		}// if argv==1
-
 		if (atoi(argv[1]) == 2)
 		{
+		//			size = get_file_size(fptr1);
+					printf("reading file:\n");
 					while ( (c = getc(fptr1) ) != EOF) 
 					{
-
-							printf("%c", c); 
 							/*read char until new line*/
 							lstr[index] = c;
 							if (c == '\n') 
@@ -94,16 +109,56 @@ int main (int argc, char *argv[])
 							}// if \n
 							/* increment */
 							index++;
-						}//while 
+					}//while
+						
+			/* sort the file into output file */
+					int length = strlen(sort_cmd) + sizeof(fout_name) + strlen(ret_cmd) + 1; // *2 need 2x
+					char sys_cmd[length +1]; //+1 for null termnator
+					sys_cmd[length] = '\0';
+					strcpy(&fout_name, argv[3]);
+					strcpy(&sys_cmd, sort_cmd);
+					strcat(&sys_cmd, " ");
+					strcat(&sys_cmd, &fout_name);
+					strcat(&sys_cmd, ret_cmd);
+					strcat(&sys_cmd, sort_out);
 
-					printf("\n"); 
+					printf("command %s\n", &sys_cmd);
+					system(&sys_cmd);
+					printf("copied.\n");
+
 		} //if argv == 2
-
-
-	fclose(fptr1);
-	fclose(fptr2);
-
-	printf("complete...\n"); 
-	return NULL; 
-
+		 
+			if (atoi(argv[1]) == 3)
+			{
+						charac = words = lines = 0;
+						while( (c = getc(fptr1)) != EOF)
+						{
+						 		charac++;
+								if (ch == '\n' || ch == '\0')
+										lines++;
+								
+								if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\0')
+										words++;
+						}//while ()
+						
+						if (charac > 0)
+						{
+								words++;
+								lines++;
+						}
+				printf("\n");
+		    printf("Total chars  = %d\n", charac);
+    		printf("Total words      = %d\n", words);
+    		printf("Total lines      = %d\n", lines);
+		
+			fclose(fptr1);
+			fclose(fptr2);
+			
+			}//if argv = 3
+					
+		return 0;
+									
+		
 }//int main()
+
+		
